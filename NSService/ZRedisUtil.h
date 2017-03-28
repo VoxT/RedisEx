@@ -26,36 +26,33 @@ public:
     bool Init(const std::string& host, uint32_t port);
     
     
-    std::string GetMsgKey(const std::string& strMsgId)
+    std::string GetMsgKey(const uint64_t uMsgId)
     {
-        if(strMsgId.empty())
-            return "";
+        std::string strMsgId = Poco::NumberFormatter::format(uMsgId);
         
         return std::string("ns:msg:" + strMsgId + ":info");
     }
     
-    std::string GetUserMsgListKey(const std::string& strUserId)
+    std::string GetUserMsgListKey(const uint64_t uUserId)
     {
-        if(strUserId.empty())
-            return "";
+        std::string strUserId = Poco::NumberFormatter::format(uUserId);
         
         return std::string("ns:msg_list_of_user:" + strUserId);
     }
     
-    std::string GetSenderMsgListKey(const std::string& strSenderId)
+    std::string GetSenderMsgListKey(const uint64_t uSenderId)
     {
-        if(strSenderId.empty())
-            return "";
+        std::string strSenderId = Poco::NumberFormatter::format(uSenderId);
         
         return std::string("ns:msg_list_of_sender:" + strSenderId);
     }
 
     
-    bool SavedInfo(const std::string& strSenderId, const std::string& strUserId,\
+    bool SaveInfo(const uint64_t uSenderId, const uint64_t uUserId,\
                    const std::string& strMsgData, bool bProcessedMsgResult,\
                    const uint64_t uReqTime, const uint64_t uSendTime);
     
-    bool GetSenderStatistic(const std::string& strSenderId);
+    bool GetSenderStatistic(const uint64_t uSenderId);
 };
 
 #endif /* ZREDISUTIL_H */

@@ -37,28 +37,28 @@ void ZApiMsgHandler::handleRequest(Poco::Net::HTTPServerRequest& request, Poco::
         return;
     }
 
-    std::string strMsgData, strSenderId, strUserId;
-    if (!ZApiUtil::GetValueFromJsonString<std::string>(strJsonData, API_KEY_SENDER_ID, strSenderId))
+    std::string strMsgData;
+    uint64_t uUserId, uSenderId;
+    if (!ZApiUtil::GetValueFromJsonString<uint64_t>(strJsonData, API_KEY_SENDER_ID, uSenderId))
     {
-        respStream << strError;
+        respStream << "get value from json failed";
         return;
     }
-    if (!ZApiUtil::GetValueFromJsonString<std::string>(strJsonData, API_KEY_USER_ID, strUserId))
+    if (!ZApiUtil::GetValueFromJsonString<uint64_t>(strJsonData, API_KEY_USER_ID, uUserId))
     {
-            
-        respStream << strError;
+        respStream << "get value from json failed";
         return;
     }
     if (!ZApiUtil::GetValueFromJsonString<std::string>(strJsonData, API_KEY_DATA, strMsgData))
     {
-        respStream << strError;
+        respStream << "get value from json failed";
         return;
     }
     
     bool bPMsgResult = ProceessData(strMsgData);
     uint64_t uSendTime = ZApiUtil::GetTimestampMillis() + 500;
     
-    if (!ZRedisUtil::GetInstance().SavedInfo(strSenderId, strUserId, strMsgData, bPMsgResult, uReqTime, uSendTime))
+    if (!ZRedisUtil::GetInstance().SaveInfo(uSenderId, uUserId, strMsgData, bPMsgResult, uReqTime, uSendTime))
     {
         respStream << ZApiUtil::HandleResult(API_RES_SAVE_MSG_FAIL, "save message failed.", true);
         return;

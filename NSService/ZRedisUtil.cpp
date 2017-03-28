@@ -32,11 +32,11 @@ bool ZRedisUtil::Init(const std::string& host, uint32_t port)
     return true;
 }
 
-bool ZRedisUtil::SavedInfo(const std::string& strSenderId, const std::string& strUserId,\
+bool ZRedisUtil::SaveInfo(const uint64_t uSenderId, const uint64_t uUserId,\
                            const std::string& strMsgData, bool bProcessedMsgResult,\
                            const uint64_t uReqTime, const uint64_t uSendTime)
 {
-    if (strMsgData.empty() || strSenderId.empty() || strUserId.empty())
+    if (strMsgData.empty() || (uReqTime > uSendTime))
         return false;
     
     // get msgId
@@ -46,13 +46,13 @@ bool ZRedisUtil::SavedInfo(const std::string& strSenderId, const std::string& st
     std::string strMsgId = Poco::NumberFormatter::format(uMsgIdIncr);
     
     // hash msg
-    std::string strHash = GetMsgKey(strMsgId);
+    std::string strHash = GetMsgKey(uMsgIdIncr);
     if (strHash.empty())
         return false;
     
-    if (m_zCluster.HSet(strHash, RDS_NS_MSG_INFO_FIELD_SENDER_ID, strSenderId) == -1)
+    if (m_zCluster.HSet(strHash, RDS_NS_MSG_INFO_FIELD_SENDER_ID, Poco::NumberFormatter::format(uSenderId)) == -1)
         return false;
-    if (m_zCluster.HSet(strHash, RDS_NS_MSG_INFO_FIELD_USER_ID, strUserId) == -1)
+    if (m_zCluster.HSet(strHash, RDS_NS_MSG_INFO_FIELD_USER_ID, Poco::NumberFormatter::format(uUserId)) == -1)
         return false;
     if (m_zCluster.HSet(strHash, RDS_NS_MSG_INFO_FIELD_DATA, strMsgData) == -1)
         return false;
@@ -64,27 +64,22 @@ bool ZRedisUtil::SavedInfo(const std::string& strSenderId, const std::string& st
         return false;
     
     // set sender
-    if (m_zCluster.SAdd(RDS_NS_SENDERS, strSenderId) == -1)
+    if (m_zCluster.SAdd(RDS_NS_SENDERS, Poco::NumberFormatter::format(uSenderId)) == -1)
         return false;
-    if (m_zCluster.SAdd(RDS_NS_USERS, strUserId) == -1)
+    if (m_zCluster.SAdd(RDS_NS_USERS, Poco::NumberFormatter::format(uUserId)) == -1)
         return false;
     
-    if (m_zCluster.ZAdd(GetSenderMsgListKey(strSenderId), uReqTime, strMsgId) == -1)
+    if (m_zCluster.ZAdd(GetSenderMsgListKey(uSenderId), uReqTime, strMsgId) == -1)
         return false;
-    if (m_zCluster.ZAdd(GetUserMsgListKey(strUserId), uSendTime, strMsgId) == -1)
+    if (m_zCluster.ZAdd(GetUserMsgListKey(uUserId), uSendTime, strMsgId) == -1)
         return false;
     
     return true;
 }
 
-bool ZRedisUtil::GetSenderStatistic(const std::string& strSenderId)
-{
-    if (strSenderId.empty())
-        return false;
-    
-    std::string strKey = GetSenderMsgListKey(strSenderId);
-    if(strKey.empty())
-        return false;
+bool ZRedisUtil::GetSenderStatistic(const uint64_t uSenderId)
+{    
+    std::string strKey = GetSenderMsgListKey(uSenderId);
     
     std::vector<std::string> vtMsgId;
     if (m_zCluster.ZRange(strKey, 0, -1, vtMsgId) == -1)
@@ -95,9 +90,9 @@ bool ZRedisUtil::GetSenderStatistic(const std::string& strSenderId)
     std::set<std::string> setUserId;
     for (uint64_t i = 0; i < vtMsgId.size(); i++)
     {
-        std::string strMsgKey = GetMsgKey(vtMsgId[i]);
-        if (strMsgKey.empty())
-            return false;
+        uint64_t uMsgId = 0;
+        Poco::NumberParser::tryParseUnsigned64(vtMsgId[i], uMsgId);
+        std::string strMsgKey = GetMsgKey(uMsgId);
         
         std::string strUserId = m_zCluster.HGetString(strMsgKey, RDS_NS_MSG_INFO_FIELD_USER_ID);
         if (strUserId.empty())
