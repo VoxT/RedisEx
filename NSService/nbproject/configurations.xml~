@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="97">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>ZApiDefine.h</itemPath>
+      <itemPath>ZApiExceptionHandler.h</itemPath>
+      <itemPath>ZApiMsgHandler.h</itemPath>
+      <itemPath>ZApiUtil.h</itemPath>
+      <itemPath>ZConfigReader.h</itemPath>
+      <itemPath>ZHandlerFactory.h</itemPath>
+      <itemPath>ZHttpServer.h</itemPath>
+      <itemPath>ZLogUtil.h</itemPath>
+      <itemPath>ZRedisDefine.h</itemPath>
+      <itemPath>ZRedisUtil.h</itemPath>
+      <itemPath>ZStringDefine.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f1" displayName="inireader" projectFiles="true">
+      <itemPath>inireader/INIReader.cpp</itemPath>
+      <itemPath>inireader/INIReader.h</itemPath>
+      <itemPath>inireader/ini.c</itemPath>
+      <itemPath>inireader/ini.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f2" displayName="redis" projectFiles="true">
+      <itemPath>redis/asynchirediscommand.h</itemPath>
+      <itemPath>redis/cluster.h</itemPath>
+      <itemPath>redis/clusterexception.h</itemPath>
+      <itemPath>redis/container.h</itemPath>
+      <itemPath>redis/hirediscommand.h</itemPath>
+      <itemPath>redis/hiredisprocess.h</itemPath>
+      <itemPath>redis/slothash.h</itemPath>
+      <itemPath>redis/zcluster.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>ZApiExceptionHandler.cpp</itemPath>
+      <itemPath>ZApiMsgHandler.cpp</itemPath>
+      <itemPath>ZApiUtil.cpp</itemPath>
+      <itemPath>ZConfigReader.cpp</itemPath>
+      <itemPath>ZHandlerFactory.cpp</itemPath>
+      <itemPath>ZHttpServer.cpp</itemPath>
+      <itemPath>ZLogUtil.cpp</itemPath>
+      <itemPath>ZRedisUtil.cpp</itemPath>
+      <itemPath>main.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f4" displayName="test" projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <standard>10</standard>
+        </cTool>
+        <ccTool>
+          <standard>8</standard>
+          <preprocessorList>
+            <Elem>WRITE_LOG</Elem>
+          </preprocessorList>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibFileItem>/usr/local/lib/libPocoNetd.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/local/lib/libPocoUtild.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/local/lib/libPocoJSONd.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/local/lib/libPocoXMLd.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/local/lib/libPocoDatad.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/local/lib/libPocoFoundationd.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/local/lib/libPocoCryptod.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/local/lib/libPocoNetSSLd.a</linkerLibFileItem>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+            <linkerLibFileItem>/usr/local/lib/libhiredis.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/lib/x86_64-linux-gnu/librt.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/lib/x86_64-linux-gnu/libz.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/lib/x86_64-linux-gnu/libssl.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/lib/x86_64-linux-gnu/libcrypto.a</linkerLibFileItem>
+            <linkerOptionItem>-ldl</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="ZApiDefine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZApiExceptionHandler.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZApiExceptionHandler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZApiMsgHandler.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZApiMsgHandler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZApiUtil.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZApiUtil.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZConfigReader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZConfigReader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZHandlerFactory.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZHandlerFactory.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZHttpServer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZHttpServer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZLogUtil.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZLogUtil.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZRedisDefine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZRedisUtil.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZRedisUtil.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZStringDefine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inireader/INIReader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="inireader/INIReader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inireader/ini.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inireader/ini.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="redis/asynchirediscommand.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="redis/cluster.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="redis/clusterexception.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="redis/container.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="redis/hirediscommand.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="redis/hiredisprocess.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="redis/slothash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="redis/zcluster.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <standard>8</standard>
+          <commandLine>-std=c++1y -static-libgcc -static-libstdc++</commandLine>
+          <preprocessorList>
+            <Elem>WRITE_LOG</Elem>
+          </preprocessorList>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <linkerTool>
+          <stripSymbols>true</stripSymbols>
+          <linkerLibItems>
+            <linkerLibFileItem>/usr/local/lib/libPocoNet.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/local/lib/libPocoUtil.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/local/lib/libPocoJSON.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/local/lib/libPocoXML.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/local/lib/libPocoData.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/local/lib/libPocoFoundation.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/local/lib/libPocoCrypto.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/local/lib/libPocoNetSSL.a</linkerLibFileItem>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+            <linkerLibFileItem>/usr/local/lib/libhiredis.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/lib/x86_64-linux-gnu/librt.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/lib/x86_64-linux-gnu/libz.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/lib/x86_64-linux-gnu/libssl.a</linkerLibFileItem>
+            <linkerLibFileItem>/usr/lib/x86_64-linux-gnu/libcrypto.a</linkerLibFileItem>
+            <linkerOptionItem>-ldl</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="ZApiDefine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZApiExceptionHandler.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZApiExceptionHandler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZApiMsgHandler.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZApiMsgHandler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZApiUtil.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZApiUtil.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZConfigReader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZConfigReader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZHandlerFactory.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZHandlerFactory.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZHttpServer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZHttpServer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZLogUtil.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZLogUtil.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZRedisDefine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZRedisUtil.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ZRedisUtil.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ZStringDefine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inireader/INIReader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="inireader/INIReader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inireader/ini.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inireader/ini.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="redis/asynchirediscommand.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="redis/cluster.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="redis/clusterexception.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="redis/container.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="redis/hirediscommand.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="redis/hiredisprocess.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="redis/slothash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="redis/zcluster.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
