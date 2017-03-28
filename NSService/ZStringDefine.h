@@ -14,17 +14,9 @@
 #ifndef ZSTRINGDEFINE_H
 #define ZSTRINGDEFINE_H
 
-#define KEY_STRING_VERSION                          "version"
-#define KEY_STRING_DATA                             "data"
-#define KEY_STRING_SIGNATURE                        "signature"
-#define KEY_STRING_EXPIRE_TIME                      "expiretime"
-#define KEY_STRING_UIDS                             "uids"
-#define KEY_STRING_PUSH_TITLE                       "pushtitle"
-#define KEY_STRING_PUSH_DATA                        "pushembeddata"
-#define KEY_STRING_SOURCE_ID                        "sourceid"
-#define KEY_STRING_MSG_TYPE                         "msgtype"
-#define KEY_STRING_IS_PRIVATE                       "isprivate"
-
+#define API_KEY_SENDER_ID                   "senderId"
+#define API_KEY_USER_ID                     "userId"
+#define API_KEY_DATA                        "data"
 
 
 #endif /* ZSTRINGDEFINE_H */

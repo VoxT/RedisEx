@@ -16,6 +16,7 @@
 #include "ZApiExceptionHandler.h"
 #include "ZRedisUtil.h"
 #include "ZApiDefine.h"
+#include "ZStringDefine.h"
 
 bool ZApiMsgHandler::ProceessData(const std::string& strMsgData)
 {
@@ -56,7 +57,7 @@ void ZApiMsgHandler::handleRequest(Poco::Net::HTTPServerRequest& request, Poco::
     }
     
     bool bPMsgResult = ProceessData(strMsgData);
-    uint64_t uSendTime = ZApiUtil::GetTimestampMillis() + 500;
+    uint64_t uSendTime = ZApiUtil::GetTimestampMillis() + 10;
     
     if (!ZRedisUtil::GetInstance().SaveInfo(uSenderId, uUserId, strMsgData, bPMsgResult, uReqTime, uSendTime))
     {

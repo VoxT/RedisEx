@@ -66,14 +66,14 @@ public class APIDemo {
         
         while (uReqFeq < 100)
         {
-            String strJSON = ObjectToString(new JSMessageExample(random.nextInt(9) + 1,
-                              random.nextInt(9) + 11, "msg_" + Integer.toString(uReqFeq)));
+            String strJSON = ObjectToString(new JSMessageExample(random.nextInt(10) + 1,
+                              random.nextInt(10) + 11, "msg_" + Integer.toString(uReqFeq)));
 
             String res = sendPostJson("http://localhost:9999/nsservice/api/msg", strJSON, 10000);
             System.out.println("Result: " + res);
             
             ++uReqFeq;
-            Thread.sleep(1000);
+            Thread.sleep(10);
         }
     }
 

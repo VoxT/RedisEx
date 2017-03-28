@@ -24,8 +24,7 @@ private:
 public:
     static ZRedisUtil& GetInstance();
     bool Init(const std::string& host, uint32_t port);
-    
-    
+        
     std::string GetMsgKey(const uint64_t uMsgId)
     {
         std::string strMsgId = Poco::NumberFormatter::format(uMsgId);

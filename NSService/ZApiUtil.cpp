@@ -7,70 +7,13 @@
 #include "ZApiUtil.h"
 #include "ZLogUtil.h"
 #include "ZApiDefine.h"
-#include "ZStringDefine.h"
 #include <sys/time.h>
-
 #include <iostream>
 
 std::string ZApiUtil::GetResponseString(uint32_t u32Code, const std::string& strMessage)
 {
     return ("{\"code\":" + Poco::NumberFormatter::format(u32Code) + ",\"message\":\"" + strMessage + "\"}");
 }
-
-#if 0
-/**
- * 
- * @param u64Deadline timestamp in millisecond
- * @return expire time in second
- */
-uint64_t ZApiUtil::GetExpireTime(uint64_t u64Deadline)
-{
-    if (!u64Deadline)
-        return 0;
-
-    // Poco::Timestamp is in microsecond => * 1000
-    Poco::Timestamp tsDeadline(u64Deadline * 1000);
-    Poco::Timestamp tsNow; // Creates a timestamp with the current time
-
-    if (tsDeadline <= tsNow)
-        return 0;
-
-    uint64_t u64ExpireTime = (tsDeadline - tsNow);
-    u64ExpireTime /= (1000 * 1000); // to second
-
-    return u64ExpireTime;
-}
-
-bool ZApiUtil::GetIntegerValueFromJSonString(const std::string& strJSonData, const std::string& strKey, int32_t& n32Value)
-{
-    if (strJSonData.empty() || strKey.empty())
-        return false;
-
-    try {
-        Poco::JSON::Parser parser;
-        Poco::Dynamic::Var result = parser.parse(strJSonData);
-
-        Poco::JSON::Object::Ptr object = result.extract<Poco::JSON::Object::Ptr>();
-
-        if (!object->has(strKey)) {
-            return false;
-        }
-        
-        n32Value = object->getValue<int32_t>(strKey);
-
-        return true;
-    }
-    catch (Poco::Exception &ex) {
-
-    }
-    catch (std::exception &e) {
-
-    }
-    
-    return false;
-}
-
-#endif
 
 std::string ZApiUtil::HandleResult(uint32_t u32Code, const std::string& strMessage, bool bIsError)
 {

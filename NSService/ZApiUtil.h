@@ -18,7 +18,6 @@
 #include <iostream>
 #include <Poco/Net/HTTPServerRequest.h>
 
-
 #include <Poco/NumberFormatter.h>
 #include <Poco/Timestamp.h>
 #include <Poco/JSON/Parser.h>
@@ -31,10 +30,7 @@
 class ZApiUtil
 {
 public:
-    
     static std::string GetResponseString(uint32_t u32Code, const std::string& strMessage);
-//    static uint64_t GetExpireTime(uint64_t u64Deadline);
-//    static bool GetIntegerValueFromJSonString(const std::string& strJSonData, const std::string& strKey, int32_t& n32Value);
     static bool GetJsonDataFromRequest(Poco::Net::HTTPServerRequest& request, std::string& strJsonData, std::string& strErrMsg);
     static std::string HandleResult(uint32_t u32Code, const std::string& strMessage, bool bIsError);
     static uint64_t GetTimestampMillis();

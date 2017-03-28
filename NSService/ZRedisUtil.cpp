@@ -43,16 +43,19 @@ bool ZRedisUtil::SaveInfo(const uint64_t uSenderId, const uint64_t uUserId,\
     uint64_t uMsgIdIncr = m_zCluster.Incr(RDS_NS_MSG_ID_INCR);
     if (uMsgIdIncr == 0)
         return false;
+    
     std::string strMsgId = Poco::NumberFormatter::format(uMsgIdIncr);
+    std::string strSenderId = Poco::NumberFormatter::format(uSenderId);
+    std::string strUserId = Poco::NumberFormatter::format(uUserId);
     
     // hash msg
     std::string strHash = GetMsgKey(uMsgIdIncr);
     if (strHash.empty())
         return false;
     
-    if (m_zCluster.HSet(strHash, RDS_NS_MSG_INFO_FIELD_SENDER_ID, Poco::NumberFormatter::format(uSenderId)) == -1)
+    if (m_zCluster.HSet(strHash, RDS_NS_MSG_INFO_FIELD_SENDER_ID, strSenderId) == -1)
         return false;
-    if (m_zCluster.HSet(strHash, RDS_NS_MSG_INFO_FIELD_USER_ID, Poco::NumberFormatter::format(uUserId)) == -1)
+    if (m_zCluster.HSet(strHash, RDS_NS_MSG_INFO_FIELD_USER_ID, strUserId) == -1)
         return false;
     if (m_zCluster.HSet(strHash, RDS_NS_MSG_INFO_FIELD_DATA, strMsgData) == -1)
         return false;
@@ -64,9 +67,9 @@ bool ZRedisUtil::SaveInfo(const uint64_t uSenderId, const uint64_t uUserId,\
         return false;
     
     // set sender
-    if (m_zCluster.SAdd(RDS_NS_SENDERS, Poco::NumberFormatter::format(uSenderId)) == -1)
+    if (m_zCluster.SAdd(RDS_NS_SENDERS, strSenderId) == -1)
         return false;
-    if (m_zCluster.SAdd(RDS_NS_USERS, Poco::NumberFormatter::format(uUserId)) == -1)
+    if (m_zCluster.SAdd(RDS_NS_USERS, strUserId) == -1)
         return false;
     
     if (m_zCluster.ZAdd(GetSenderMsgListKey(uSenderId), uReqTime, strMsgId) == -1)
@@ -91,7 +94,9 @@ bool ZRedisUtil::GetSenderStatistic(const uint64_t uSenderId)
     for (uint64_t i = 0; i < vtMsgId.size(); i++)
     {
         uint64_t uMsgId = 0;
-        Poco::NumberParser::tryParseUnsigned64(vtMsgId[i], uMsgId);
+        if (!Poco::NumberParser::tryParseUnsigned64(vtMsgId[i], uMsgId))
+            return false;
+        
         std::string strMsgKey = GetMsgKey(uMsgId);
         
         std::string strUserId = m_zCluster.HGetString(strMsgKey, RDS_NS_MSG_INFO_FIELD_USER_ID);

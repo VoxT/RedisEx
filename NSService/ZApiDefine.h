@@ -34,10 +34,6 @@
 #define API_PATH                            "api"
 #define API_PATH_MSG                        "msg"
 
-#define API_KEY_SENDER_ID                   "senderId"
-#define API_KEY_USER_ID                     "userId"
-#define API_KEY_DATA                        "data"
-
 #define MAX_REQ_BUFFER_SIZE                 10240
 
 #endif /* ZAPIDEFINE_H */
