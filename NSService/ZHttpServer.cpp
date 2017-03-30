@@ -37,9 +37,15 @@ int ZHttpServer::main(const std::vector<std::string>& args)
     if (!ZRedisUtil::GetInstance().Init("127.0.0.1", 8000))
         return EXIT_FAILURE;
     
-//    if (!ZRedisUtil::GetInstance().GetSenderStatistic(6))
-//        return EXIT_FAILURE;
-//    return EXIT_OK;
+    
+    std::vector<uint64_t> vtMsg;
+    if (!ZRedisUtil::GetInstance().GetListUserBySender(1, vtMsg))
+        return EXIT_FAILURE;
+    for (uint32_t i = 0; i < vtMsg.size(); i++)
+    {
+        std::cout<< vtMsg[i] << " ";
+    }
+    return EXIT_OK;
     
     server.start();
 

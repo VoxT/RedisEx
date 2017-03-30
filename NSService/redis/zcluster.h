@@ -294,6 +294,34 @@ public:
         return i64Ret;
     }
     
+    /**
+     * @param strKey
+     * @param strField
+     * @param uIncr
+     * @return the value at field after the increment operation.
+     */
+    uint64_t HIncrby(const std::string& strKey, const std::string& strField, const uint64_t uIncr)
+    {
+        uint64_t u64Ret = 0;
+        if (!m_pCluster || strField.empty() || strKey.empty())
+            return u64Ret;
+        
+        std::string strIncr = Poco::NumberFormatter::format(uIncr);
+        redisReply* reply = ExecCommandRedis(ExecRedisCommand, "HINCRBY", &strKey,\
+                                &strField, &strIncr);
+        
+        if (!reply)
+            return u64Ret;
+        
+        if (reply->type == REDIS_REPLY_INTEGER)
+        {
+            u64Ret = reply->integer;
+        }
+        
+        DeleteRedisReply(reply);
+        return u64Ret;
+    }
+    
     uint64_t Incr(const std::string& strKey) {
         uint64_t u64Ret = 0;
         if (!m_pCluster || strKey.empty())
@@ -517,34 +545,33 @@ public:
     }
 
     /**
-     * 
      * @param strKey
-     * @return list of elements in the specified range.
-     * @return 0 if key does not exist.
-     * @return -1 Set failed
+     * @param uStart
+     * @param uStop
+     * @param vtElements
+     * @return true: succeed, false: failed.
      */
-    int64_t ZRange(const std::string& strKey, const int64_t uStart,\
+    bool ZRangeString(const std::string& strKey, const int64_t uStart,\
                    const int64_t uStop, std::vector<std::string>& vtElements) 
     {
         vtElements.clear();
-        int64_t i64Ret = -1;
         if (!m_pCluster || strKey.empty())
-            return i64Ret;
+            return false;
         
         std::string strStart = Poco::NumberFormatter::format(uStart);
         std::string strStop = Poco::NumberFormatter::format(uStop);
         redisReply* reply = ExecCommandRedis(ExecRedisCommand, "ZRANGE",&strKey, &strStart, &strStop);
 
         if (!reply)
-            return i64Ret;
+            return false;
 
         if (reply->type != REDIS_REPLY_ARRAY)
         {
             DeleteRedisReply(reply);
-            return i64Ret;
+            return false;
         }
         
-        for (uint32_t i = 0; i < (i64Ret = reply->elements); i++)
+        for (uint32_t i = 0; i < reply->elements; i++)
         {
             redisReply* element = reply->element[i];
             
@@ -561,7 +588,28 @@ public:
         }
 
         DeleteRedisReply(reply);
-        return i64Ret;
+        return true;
+    }
+    
+    bool ZRangeInteger(const std::string& strKey, const int64_t uStart,\
+                   const int64_t uStop, std::vector<uint64_t>& vtElements) 
+    {
+        vtElements.clear();
+        if (!m_pCluster || strKey.empty())
+            return false;
+        
+        std::vector<std::string> vtStrElements;
+        if (!ZRangeString(strKey, uStart, uStop, vtStrElements))
+            return false;
+        
+        for (uint32_t i = 0; i < vtStrElements.size(); i++)
+        {
+            uint64_t u64Value;
+            if (Poco::NumberParser::tryParseUnsigned64(vtStrElements[i], u64Value))
+                vtElements.push_back(u64Value);
+        }
+        
+        return true;
     }
     
     bool Keys(const std::string& strPattern, std::vector<std::string>& vtKeys)
