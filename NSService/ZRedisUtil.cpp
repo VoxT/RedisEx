@@ -32,42 +32,63 @@ bool ZRedisUtil::Init(const std::string& host, uint32_t port)
     return true;
 }
 
-bool ZRedisUtil::SaveInfo(const uint64_t uSenderId, const uint64_t uUserId,\
-                           const std::string& strMsgData,const bool bProcessedMsgResult,\
-                           const uint64_t uReqTime, const uint64_t uSendTime)
+bool ZRedisUtil::SaveInfo(uint64_t uSenderId, uint64_t uUserId,\
+                           const std::string& strMsgData,bool bProcessedMsgResult,\
+                           uint64_t uReqTime, uint64_t uSendTime)
 {
     if (strMsgData.empty() || (uReqTime > uSendTime))
         return false;
    
     uint64_t uMsgId = HSetMsg(uSenderId, uUserId, strMsgData, bProcessedMsgResult, uReqTime, uSendTime);
     if (uMsgId == 0)
+    { 
+        std::cout << "set msg failed" << std::endl;
         return false;
+    }
     
     std::string strMsgId = Poco::NumberFormatter::format(uMsgId);
     
     // set sender
     if (m_zCluster.SAdd(RDS_NS_SENDERS, Poco::NumberFormatter::format(uSenderId)) == -1)
+    { 
+        std::cout << "set senders failed" << std::endl;
         return false;
+    }
     if (m_zCluster.SAdd(RDS_NS_USERS, Poco::NumberFormatter::format(uUserId)) == -1)
+    { 
+        std::cout << "set users failed" << std::endl;
         return false;
+    }
     
     if (m_zCluster.ZAdd(GetSenderMsgListKey(uSenderId), uReqTime, strMsgId) == -1)
+    { 
+        std::cout << "set sender msg list failed" << std::endl;
         return false;
+    }
     if (m_zCluster.ZAdd(GetUserMsgListKey(uUserId), uSendTime, strMsgId) == -1)
+    { 
+        std::cout << "set user msg list failed" << std::endl;
         return false;
+    }
          
     if (!HSetRequestCounter(bProcessedMsgResult))
+    { 
+        std::cout << "HSetRequestCounter failed" << std::endl;
         return false;
+    }
     
     if (!HSetProcessedTime(uSendTime - uReqTime))
+    { 
+        std::cout << "HSetProcessedTime failed" << std::endl;
         return false;
+    }
     
     return true;
 }
 
-uint64_t ZRedisUtil::HSetMsg(const uint64_t uSenderId, const uint64_t uUserId,\
-                            const std::string& strMsgData,const bool bProcessedMsgResult,\
-                            const uint64_t uReqTime, const uint64_t uSendTime)
+uint64_t ZRedisUtil::HSetMsg(uint64_t uSenderId, uint64_t uUserId,\
+                            const std::string& strMsgData, bool bProcessedMsgResult,\
+                            uint64_t uReqTime, uint64_t uSendTime)
 {
     uint64_t uRet = 0;
     if (strMsgData.empty())
@@ -101,7 +122,7 @@ uint64_t ZRedisUtil::HSetMsg(const uint64_t uSenderId, const uint64_t uUserId,\
     return uRet;
 }
 
-bool ZRedisUtil::HSetProcessedTime(const uint64_t uPTime)
+bool ZRedisUtil::HSetProcessedTime(uint64_t uPTime)
 {
     // processed time
     uint64_t uIsExists = m_zCluster.Exists(RDS_NS_PROCESSED_TIME);
@@ -150,8 +171,8 @@ bool ZRedisUtil::HSetProcessedTime(const uint64_t uPTime)
         uint64_t uAvgTime = GetAverageProcessedTime();
         if (uAvgTime == 0)
             return false;
-        
-        uAvgTime = (uAvgTime + uPTime) / uReqTotal;
+
+        uAvgTime = (uint64_t) ((uAvgTime*(uReqTotal - 1)) + uPTime) / uReqTotal;
         if (m_zCluster.HSet(RDS_NS_PROCESSED_TIME, RDS_NS_PROCESSED_TIME_FIELD_AVERAGE, Poco::NumberFormatter::format(uAvgTime)) == -1)
             return false;
     }
@@ -159,7 +180,7 @@ bool ZRedisUtil::HSetProcessedTime(const uint64_t uPTime)
     return true;
 }
 
-bool ZRedisUtil::HSetRequestCounter(const bool bProcessedMsgResult)
+bool ZRedisUtil::HSetRequestCounter(bool bProcessedMsgResult)
 {
     // request counter
     uint8_t uIsExists = m_zCluster.Exists(RDS_NS_REQ_COUNTER);
@@ -189,7 +210,7 @@ bool ZRedisUtil::HSetRequestCounter(const bool bProcessedMsgResult)
     return true;
 }
 
-bool ZRedisUtil::CheckMsgExists(const uint64_t uMsgId)
+bool ZRedisUtil::CheckMsgExists(uint64_t uMsgId)
 {
     std::string strMsgKey = GetMsgKey(uMsgId);
     if (m_zCluster.Exists(strMsgKey) != 1)
@@ -198,7 +219,7 @@ bool ZRedisUtil::CheckMsgExists(const uint64_t uMsgId)
     return true;
 }
 
-bool ZRedisUtil::GetListMsgBySender(const uint64_t uSenderId, std::vector<uint64_t>& vtMsgId)
+bool ZRedisUtil::GetListMsgBySender(uint64_t uSenderId, std::vector<uint64_t>& vtMsgId)
 {
     vtMsgId.clear();
     std::string strKey = GetSenderMsgListKey(uSenderId);
@@ -206,7 +227,7 @@ bool ZRedisUtil::GetListMsgBySender(const uint64_t uSenderId, std::vector<uint64
     return m_zCluster.ZRangeInteger(strKey, 0, -1, vtMsgId);
 }
 
-bool ZRedisUtil::GetListMsgByUser(const uint64_t uUserId, std::vector<uint64_t>& vtMsgId)
+bool ZRedisUtil::GetListMsgByUser(uint64_t uUserId, std::vector<uint64_t>& vtMsgId)
 {
     vtMsgId.clear();
     std::string strKey = GetUserMsgListKey(uUserId);
@@ -239,7 +260,7 @@ bool ZRedisUtil::GetListSenderByUser(const uint64_t uUserId, std::vector<uint64_
     return true;
 }
 
-bool ZRedisUtil::GetListUserBySender(const uint64_t uSenderId, std::vector<uint64_t>& vtUsers)
+bool ZRedisUtil::GetListUserBySender(uint64_t uSenderId, std::vector<uint64_t>& vtUsers)
 {
     vtUsers.clear();
     
@@ -271,7 +292,7 @@ uint64_t ZRedisUtil::GetTotalRequest()
 
 uint64_t ZRedisUtil::GetTotalSucceedRequest()
 {
-    return m_zCluster.HGetInteger(RDS_NS_REQ_COUNTER, RDS_NS_REQ_COUNTER_FIELD_TOTAL);
+    return m_zCluster.HGetInteger(RDS_NS_REQ_COUNTER, RDS_NS_REQ_COUNTER_FIELD_SUCCEED);
 }
 
 uint64_t ZRedisUtil::GetTotalFailedRequest()
@@ -300,4 +321,24 @@ uint64_t ZRedisUtil::GetMaxProcessedTime()
 uint64_t ZRedisUtil::GetMinProcessedTime()
 {
     return m_zCluster.HGetInteger(RDS_NS_PROCESSED_TIME, RDS_NS_PROCESSED_TIME_FIELD_MIN);
+}
+
+bool ZRedisUtil::GetAllSenders(std::vector<uint64_t>& vtSenders)
+{
+    vtSenders.clear();
+    
+    if (!m_zCluster.SMembersInteger(RDS_NS_SENDERS, vtSenders))
+        return false;
+    
+    return true;
+}
+
+bool ZRedisUtil::GetAllUsers(std::vector<uint64_t>& vtUsers)
+{
+    vtUsers.clear();
+    
+    if (!m_zCluster.SMembersInteger(RDS_NS_USERS, vtUsers))
+        return false;
+    
+    return true;
 }

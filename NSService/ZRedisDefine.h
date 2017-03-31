@@ -34,7 +34,7 @@
 #define RDS_NS_PROCESSED_TIME_FIELD_MIN             "ptmin"
 #define RDS_NS_PROCESSED_TIME_FIELD_AVERAGE         "ptaverage"
 
-#define MAX_TIME_EXPIRE_KEY                 172800 // seconds (48h)
+#define MAX_TIME_EXPIRE_KEY                         172800 // seconds (48h)
 
 #endif /* ZREDISDEFINE_H */
 

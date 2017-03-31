@@ -11,6 +11,7 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="ZP Notify"/>
         <group>
+            <file>file:/home/cpu10777-local/SourceCode/RedisEx/NSService/main.cpp</file>
             <file>file:/home/cpu10777-local/SourceCode/RedisEx/NSService/ZRedisUtil.h</file>
             <file>file:/home/cpu10777-local/SourceCode/RedisEx/NSService/ZRedisUtil.cpp</file>
             <file>file:/home/cpu10777-local/SourceCode/RedisEx/NSService/ZHttpServer.cpp</file>

@@ -62,12 +62,12 @@ public class APIDemo {
 //        js.signature = "sig";
 //        String strJSON = ObjectToString(js);
         Random random = new Random();
-        int uReqFeq = 1;
+        int uReqFeq = 99;
         
-        while (uReqFeq < 100)
+        while (uReqFeq < 300)
         {
-            String strJSON = ObjectToString(new JSMessageExample(random.nextInt(10) + 1,
-                              random.nextInt(10) + 11, "msg_" + Integer.toString(uReqFeq)));
+            String strJSON = ObjectToString(new JSMessageExample(random.nextInt(100) + 1,
+                              random.nextInt(1000) + 11, "msg_" + Integer.toString(uReqFeq)));
 
             String res = sendPostJson("http://localhost:9999/nsservice/api/msg", strJSON, 10000);
             System.out.println("Result: " + res);

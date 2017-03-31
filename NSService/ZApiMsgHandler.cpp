@@ -57,11 +57,11 @@ void ZApiMsgHandler::handleRequest(Poco::Net::HTTPServerRequest& request, Poco::
     }
     
     bool bPMsgResult = ProceessData(strMsgData);
-    uint64_t uSendTime = ZApiUtil::GetTimestampMillis() + 10;
+    uint64_t uSendTime = ZApiUtil::GetTimestampMillis() + (rand() % 100 + 10);
     
     if (!ZRedisUtil::GetInstance().SaveInfo(uSenderId, uUserId, strMsgData, bPMsgResult, uReqTime, uSendTime))
     {
-        respStream << ZApiUtil::HandleResult(API_RES_SAVE_MSG_FAIL, "save message failed.", true);
+        respStream << ZApiUtil::HandleResult(API_RES_SAVE_MSG_FAIL, "save info failed.", true);
         return;
     }
     

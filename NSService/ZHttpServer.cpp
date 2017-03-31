@@ -39,7 +39,7 @@ int ZHttpServer::main(const std::vector<std::string>& args)
     
     
     std::vector<uint64_t> vtMsg;
-    if (!ZRedisUtil::GetInstance().GetListUserBySender(1, vtMsg))
+    if (!ZRedisUtil::GetInstance().GetListMsgBySender(66, vtMsg))
         return EXIT_FAILURE;
     for (uint32_t i = 0; i < vtMsg.size(); i++)
     {
@@ -47,7 +47,7 @@ int ZHttpServer::main(const std::vector<std::string>& args)
     }
     return EXIT_OK;
     
-    server.start();
+    server.start(); 
 
     waitForTerminationRequest();
 
