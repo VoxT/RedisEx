@@ -21,9 +21,12 @@ ZRedisUtil& ZRedisUtil::GetInstance()
     return zRedis;
 }
 
-bool ZRedisUtil::Init(const std::string& host, uint32_t port)
+bool ZRedisUtil::Init(const std::string& strHost, uint32_t port)
 {
-    if (!m_zCluster.Init(host, port))
+    if (strHost.empty())
+        return false;
+    
+    if (!m_zCluster.Init(strHost, port))
     {
         std::cerr << "Connect to Redis failed";
         return false;
@@ -33,7 +36,7 @@ bool ZRedisUtil::Init(const std::string& host, uint32_t port)
 }
 
 bool ZRedisUtil::SaveInfo(uint64_t uSenderId, uint64_t uUserId,\
-                           const std::string& strMsgData,bool bProcessedMsgResult,\
+                           const std::string& strMsgData, bool bProcessedMsgResult,\
                            uint64_t uReqTime, uint64_t uSendTime)
 {
     if (strMsgData.empty() || (uReqTime > uSendTime))
@@ -54,29 +57,34 @@ bool ZRedisUtil::SaveInfo(uint64_t uSenderId, uint64_t uUserId,\
         std::cout << "set senders failed" << std::endl;
         return false;
     }
+    // set user
     if (m_zCluster.SAdd(RDS_NS_USERS, Poco::NumberFormatter::format(uUserId)) == -1)
     { 
         std::cout << "set users failed" << std::endl;
         return false;
     }
     
+    // zset msg list of sender
     if (m_zCluster.ZAdd(GetSenderMsgListKey(uSenderId), uReqTime, strMsgId) == -1)
     { 
         std::cout << "set sender msg list failed" << std::endl;
         return false;
     }
+    // zset msg list of user
     if (m_zCluster.ZAdd(GetUserMsgListKey(uUserId), uSendTime, strMsgId) == -1)
     { 
         std::cout << "set user msg list failed" << std::endl;
         return false;
     }
-         
+    
+    // request counter
     if (!HSetRequestCounter(bProcessedMsgResult))
     { 
         std::cout << "HSetRequestCounter failed" << std::endl;
         return false;
     }
     
+    // min, max, average processed time
     if (!HSetProcessedTime(uSendTime - uReqTime))
     { 
         std::cout << "HSetProcessedTime failed" << std::endl;
@@ -154,7 +162,7 @@ bool ZRedisUtil::HSetProcessedTime(uint64_t uPTime)
     
     // Set min processed time
     uint64_t uMinTime = GetMinProcessedTime();
-    if (uMaxTime == 0)
+    if (uMinTime == 0)
         return false;
     if (uPTime < uMinTime)
     {
@@ -166,16 +174,17 @@ bool ZRedisUtil::HSetProcessedTime(uint64_t uPTime)
     uint64_t uReqTotal = GetTotalRequest();
     if (uReqTotal == 0)
         return false;
-    if (uReqTotal != 1)
-    {
-        uint64_t uAvgTime = GetAverageProcessedTime();
-        if (uAvgTime == 0)
-            return false;
+    if (uReqTotal == 1)
+        return true;
+    
+    // cal average processed time
+    uint64_t uAvgTime = GetAverageProcessedTime();
+    if (uAvgTime == 0)
+        return false;
 
-        uAvgTime = (uint64_t) ((uAvgTime*(uReqTotal - 1)) + uPTime) / uReqTotal;
-        if (m_zCluster.HSet(RDS_NS_PROCESSED_TIME, RDS_NS_PROCESSED_TIME_FIELD_AVERAGE, Poco::NumberFormatter::format(uAvgTime)) == -1)
-            return false;
-    }
+    uAvgTime = (uint64_t) ((((uAvgTime*(uReqTotal - 1)) + uPTime) / uReqTotal) + 0.5);
+    if (m_zCluster.HSet(RDS_NS_PROCESSED_TIME, RDS_NS_PROCESSED_TIME_FIELD_AVERAGE, Poco::NumberFormatter::format(uAvgTime)) == -1)
+        return false;
     
     return true;
 }
@@ -250,7 +259,7 @@ bool ZRedisUtil::GetListSenderByUser(const uint64_t uUserId, std::vector<uint64_
             continue;
             
         uint64_t uSenderId = m_zCluster.HGetInteger(GetMsgKey(vtMsgId[i]), RDS_NS_MSG_INFO_FIELD_SENDER_ID);
-        if (uSenderId == -1)
+        if (uSenderId == 0)
             continue;
         
         setSender.insert(uSenderId);               
@@ -300,6 +309,7 @@ uint64_t ZRedisUtil::GetTotalFailedRequest()
     uint64_t uRet = 0;
     uint64_t uTotalReq = GetTotalRequest();
     uint64_t uTotalSucceed = GetTotalSucceedRequest();
+
     if (uTotalReq < uTotalSucceed)
         return uRet;
     

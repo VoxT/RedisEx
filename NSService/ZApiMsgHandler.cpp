@@ -57,7 +57,7 @@ void ZApiMsgHandler::handleRequest(Poco::Net::HTTPServerRequest& request, Poco::
     }
     
     bool bPMsgResult = ProceessData(strMsgData);
-    uint64_t uSendTime = ZApiUtil::GetTimestampMillis() + (rand() % 100 + 10);
+    uint64_t uSendTime = ZApiUtil::GetTimestampMillis() + (rand() % 1000 + 10);
     
     if (!ZRedisUtil::GetInstance().SaveInfo(uSenderId, uUserId, strMsgData, bPMsgResult, uReqTime, uSendTime))
     {
