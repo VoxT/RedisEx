@@ -20,30 +20,14 @@
 class ZRedisUtil {
 private:
     ZCluster m_zCluster;
+
+    std::string GetMsgKey(uint64_t uMsgId);
+    std::string GetKeyListMsgByUserID(uint64_t uUserId);
+    std::string GetKeyListMsgBySenderID(uint64_t uSenderId);
     
-    std::string GetMsgKey(uint64_t uMsgId)
-    {
-        std::string strMsgId = Poco::NumberFormatter::format(uMsgId);
-        
-        return std::string("ns:msg:" + strMsgId + ":info");
-    }
-    
-    std::string GetUserMsgListKey(uint64_t uUserId)
-    {
-        std::string strUserId = Poco::NumberFormatter::format(uUserId);
-        
-        return std::string("ns:msg_list_of_user:" + strUserId);
-    }
-    
-    std::string GetSenderMsgListKey(uint64_t uSenderId)
-    {
-        std::string strSenderId = Poco::NumberFormatter::format(uSenderId);
-        
-        return std::string("ns:msg_list_of_sender:" + strSenderId);
-    }
-    
-    bool HSetProcessedTime(uint64_t uPTime);
-    bool HSetRequestCounter(bool bProcessedMsgResult);
+    bool SetProcessedTime(uint64_t uPTime);
+    bool UpdateProcessedTime(uint64_t uPTime);
+    bool UpdateRequestCounter(bool bProcessedMsgResult);
     
     /**
      * @param uSenderId
@@ -54,7 +38,7 @@ private:
      * @param uSendTime
      * @return 0 if failed. otherwise return msg id.
      */
-    uint64_t HSetMsg(uint64_t uSenderId, uint64_t uUserId,\
+    uint64_t SaveMsgInfo(uint64_t uSenderId, uint64_t uUserId,\
                    const std::string& strMsgData, bool bProcessedMsgResult,\
                    uint64_t uReqTime, uint64_t uSendTime);
     
@@ -74,20 +58,13 @@ public:
     bool GetListSenderByUser(uint64_t uUserId, std::vector<uint64_t>& vtSenderid);
     bool GetListMsgBySender(uint64_t uSenderId, std::vector<uint64_t>& vtMsgId);
     bool GetListMsgByUser(uint64_t uUserId, std::vector<uint64_t>& vtMsgId);
+    
     /**
      * @return 0 if failed. otherwise return total request.
      */
-    uint64_t GetTotalRequest();
-    
-    /**
-     * @return 0 maybe failed. otherwise return total succeed request
-     */
-    uint64_t GetTotalSucceedRequest();
-    
-    /**
-     * @return 0 maybe failed. otherwise return total failed request
-     */
-    uint64_t GetTotalFailedRequest();
+    bool GetTotalRequest(uint64_t& uResult);
+    bool GetTotalSucceedRequest(uint64_t& uResult);
+    bool GetTotalFailedRequest(uint64_t& uResult);
     
     uint64_t GetAverageProcessedTime();
     uint64_t GetMaxProcessedTime();

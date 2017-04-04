@@ -200,6 +200,14 @@ public:
         return u64Ret;
     }
 
+    bool GetInteger(const std::string& strKey, uint64_t& uResult) {
+        uResult = 0;
+        if (!Poco::NumberParser::tryParseUnsigned64(GetString(strKey), uResult))
+            return false;
+        
+        return true;
+    }
+    
     bool Set(const std::string& strKey, const std::string strValue) {
         bool bRet = false;
         if (!m_pCluster || strKey.empty() || strValue.empty())
@@ -210,7 +218,8 @@ public:
         if (!reply)
             return bRet;
 
-        if ((reply->type == REDIS_REPLY_STRING) && reply->str) {
+        if (((reply->type == REDIS_REPLY_STRING) ||\
+             (reply->type == REDIS_REPLY_STATUS)) && reply->str) {
             bRet = (strcasecmp(reply->str, "OK") == 0);
         }
 
@@ -602,9 +611,9 @@ public:
         if (!ZRangeString(strKey, uStart, uStop, vtStrElements))
             return false;
         
+        uint64_t u64Value = 0;
         for (uint32_t i = 0; i < vtStrElements.size(); i++)
         {
-            uint64_t u64Value;
             if (Poco::NumberParser::tryParseUnsigned64(vtStrElements[i], u64Value))
                 vtElements.push_back(u64Value);
         }

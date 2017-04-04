@@ -39,20 +39,20 @@ void ZApiMsgHandler::handleRequest(Poco::Net::HTTPServerRequest& request, Poco::
     }
 
     std::string strMsgData;
-    uint64_t uUserId, uSenderId;
+    uint64_t uUserId = 0, uSenderId = 0;
     if (!ZApiUtil::GetValueFromJsonString<uint64_t>(strJsonData, API_KEY_SENDER_ID, uSenderId))
     {
-        respStream << "get value from json failed";
+        respStream << ZApiUtil::HandleResult(API_RES_PARSE_FAIL, "get senderId from json failed.", true);
         return;
     }
     if (!ZApiUtil::GetValueFromJsonString<uint64_t>(strJsonData, API_KEY_USER_ID, uUserId))
     {
-        respStream << "get value from json failed";
+        respStream << ZApiUtil::HandleResult(API_RES_PARSE_FAIL, "get userId from json failed.", true);
         return;
     }
     if (!ZApiUtil::GetValueFromJsonString<std::string>(strJsonData, API_KEY_DATA, strMsgData))
     {
-        respStream << "get value from json failed";
+        respStream << ZApiUtil::HandleResult(API_RES_PARSE_FAIL, "get data from json failed.", true);
         return;
     }
     
@@ -65,6 +65,6 @@ void ZApiMsgHandler::handleRequest(Poco::Net::HTTPServerRequest& request, Poco::
         return;
     }
     
-    respStream << "save info success";
+    respStream << ZApiUtil::HandleResult(API_RES_SUCCESS, "save info succeed.", true);
 }
 

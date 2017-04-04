@@ -41,7 +41,7 @@ int ZHttpServer::main(const std::vector<std::string>& args)
     std::vector<uint64_t> vtMsg;
     for (uint32_t uSender = 1; uSender < 101; uSender++)
     {
-        std::cout<< "Sender " << uSender << ": ";
+        std::cout<< "List msg by sender " << uSender << ": ";
         if (!ZRedisUtil::GetInstance().GetListMsgBySender(uSender, vtMsg))
             return EXIT_FAILURE;
         for (uint32_t i = 0; i < vtMsg.size(); i++)
@@ -50,9 +50,18 @@ int ZHttpServer::main(const std::vector<std::string>& args)
         }
         std::cout << std::endl;
     }
-    std::cout << "Total Req: " << ZRedisUtil::GetInstance().GetTotalRequest()\
-              << "\nTotal Succeed: " << ZRedisUtil::GetInstance().GetTotalSucceedRequest()\
-              << "\nTotal failed: " << ZRedisUtil::GetInstance().GetTotalFailedRequest()
+    
+    uint64_t uTotalReq = 0, uTotalReqSucceed = 0, uTotalReqFailed = 0;
+    if (!ZRedisUtil::GetInstance().GetTotalRequest(uTotalReq))
+        return EXIT_FAILURE;
+    if (!ZRedisUtil::GetInstance().GetTotalSucceedRequest(uTotalReqSucceed))
+        return EXIT_FAILURE;
+    if (!ZRedisUtil::GetInstance().GetTotalFailedRequest(uTotalReqFailed))
+        return EXIT_FAILURE;
+    
+    std::cout << "Total Req: " << uTotalReq\
+              << "\nTotal Succeed: " << uTotalReqSucceed\
+              << "\nTotal failed: " << uTotalReqFailed\
               << "\nMax Processed time: " << ZRedisUtil::GetInstance().GetMaxProcessedTime()\
               << "\nMin Processed time: " << ZRedisUtil::GetInstance().GetMinProcessedTime()\
               << "\nAvg Processed time: " << ZRedisUtil::GetInstance().GetAverageProcessedTime();

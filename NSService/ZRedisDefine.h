@@ -25,14 +25,12 @@
 #define RDS_NS_USERS                                "ns:users"
 #define RDS_NS_SENDERS                              "ns:senders"
 
-#define RDS_NS_REQ_COUNTER                          "ns:request_counter"
-#define RDS_NS_REQ_COUNTER_FIELD_SUCCEED            "rsucceed"
-#define RDS_NS_REQ_COUNTER_FIELD_TOTAL              "rtotal"
+#define RDS_NS_REQ_COUNTER_FAILED                   "ns:request_counter_failed"
+#define RDS_NS_REQ_COUNTER_TOTAL                    "ns:request_counter_total"
 
-#define RDS_NS_PROCESSED_TIME                       "ns:processed_time"
-#define RDS_NS_PROCESSED_TIME_FIELD_MAX             "ptmax"
-#define RDS_NS_PROCESSED_TIME_FIELD_MIN             "ptmin"
-#define RDS_NS_PROCESSED_TIME_FIELD_AVERAGE         "ptaverage"
+#define RDS_NS_PROCESSED_TIME_MAX                   "ns:processed_time_max"
+#define RDS_NS_PROCESSED_TIME_MIN                   "ns:processed_time_min"
+#define RDS_NS_PROCESSED_TIME_AVERAGE               "ns:processed_time_average"
 
 #define MAX_TIME_EXPIRE_KEY                         172800 // seconds (48h)
 
