@@ -38,7 +38,6 @@ bool ZRedisUtil::Init(const std::string& strHost, uint32_t port)
     return true;
 }
 
-
 std::string ZRedisUtil::GetMsgKey(uint64_t uMsgId)
 {
     std::string strMsgId = Poco::NumberFormatter::format(uMsgId);
@@ -67,7 +66,7 @@ bool ZRedisUtil::SaveInfo(uint64_t uSenderId, uint64_t uUserId,\
     uint64_t uMsgId = SaveMsgInfo(uSenderId, uUserId, strMsgData, bProcessedMsgResult, uReqTime, uSendTime);
     if (uMsgId == 0)
     { 
-        std::cout << "set msg failed" << std::endl;
+        std::cout << "save msg failed" << std::endl;
         return false;
     }
     
@@ -176,8 +175,8 @@ bool ZRedisUtil::UpdateProcessedTime(uint64_t uPTime)
     
     std::string strPTime = Poco::NumberFormatter::format(uPTime);
     // Set max processed time
-    uint64_t uMaxTime = GetMaxProcessedTime();
-    if (uMaxTime == 0)
+    uint64_t uMaxTime = 0;
+    if (!GetMaxProcessedTime(uMaxTime))
         return false;
     if (uPTime > uMaxTime)
     {
@@ -186,8 +185,8 @@ bool ZRedisUtil::UpdateProcessedTime(uint64_t uPTime)
     }
     
     // Set min processed time
-    uint64_t uMinTime = GetMinProcessedTime();
-    if (uMinTime == 0)
+    uint64_t uMinTime = 0;
+    if (!GetMinProcessedTime(uMinTime))
         return false;
     if (uPTime < uMinTime)
     {
@@ -205,8 +204,8 @@ bool ZRedisUtil::UpdateProcessedTime(uint64_t uPTime)
         return true;
     
     // cal average processed time
-    uint64_t uAvgTime = GetAverageProcessedTime();
-    if (uAvgTime == 0)
+    uint64_t uAvgTime = 0;
+    if (!GetAverageProcessedTime(uAvgTime))
         return false;
 
     uAvgTime = (uint64_t) ((((uAvgTime*(uReqTotal - 1)) + uPTime) / uReqTotal) + 0.5);
@@ -330,19 +329,22 @@ bool ZRedisUtil::GetTotalSucceedRequest(uint64_t& uResult)
     return true;
 }
 
-uint64_t ZRedisUtil::GetAverageProcessedTime()
+bool ZRedisUtil::GetAverageProcessedTime(uint64_t& uResult)
 {
-    return m_zCluster.GetInteger(RDS_NS_PROCESSED_TIME_AVERAGE);
+    uResult = 0;
+    return m_zCluster.GetInteger(RDS_NS_PROCESSED_TIME_AVERAGE, uResult);
 }
 
-uint64_t ZRedisUtil::GetMaxProcessedTime()
+bool ZRedisUtil::GetMaxProcessedTime(uint64_t& uResult)
 {
-    return m_zCluster.GetInteger(RDS_NS_PROCESSED_TIME_MAX);
+    uResult = 0;
+    return m_zCluster.GetInteger(RDS_NS_PROCESSED_TIME_MAX, uResult);
 }
 
-uint64_t ZRedisUtil::GetMinProcessedTime()
+bool ZRedisUtil::GetMinProcessedTime(uint64_t& uResult)
 {
-    return m_zCluster.GetInteger(RDS_NS_PROCESSED_TIME_MIN);
+    uResult = 0;
+    return m_zCluster.GetInteger(RDS_NS_PROCESSED_TIME_MIN, uResult);
 }
 
 bool ZRedisUtil::GetAllSenders(std::vector<uint64_t>& vtSenders)

@@ -37,7 +37,6 @@ int ZHttpServer::main(const std::vector<std::string>& args)
     if (!ZRedisUtil::GetInstance().Init("127.0.0.1", 8000))
         return EXIT_FAILURE;
     
-    
     std::vector<uint64_t> vtMsg;
     for (uint32_t uSender = 1; uSender < 101; uSender++)
     {
@@ -59,12 +58,20 @@ int ZHttpServer::main(const std::vector<std::string>& args)
     if (!ZRedisUtil::GetInstance().GetTotalFailedRequest(uTotalReqFailed))
         return EXIT_FAILURE;
     
+    uint64_t uMaxTime = 0, uMinTime = 0, uAvegTime = 0;
+    if (!ZRedisUtil::GetInstance().GetMaxProcessedTime(uMaxTime))
+        return EXIT_FAILURE;
+    if (!ZRedisUtil::GetInstance().GetMinProcessedTime(uMinTime))
+        return EXIT_FAILURE;
+    if (!ZRedisUtil::GetInstance().GetAverageProcessedTime(uAvegTime))
+        return EXIT_FAILURE;
+    
     std::cout << "Total Req: " << uTotalReq\
               << "\nTotal Succeed: " << uTotalReqSucceed\
               << "\nTotal failed: " << uTotalReqFailed\
-              << "\nMax Processed time: " << ZRedisUtil::GetInstance().GetMaxProcessedTime()\
-              << "\nMin Processed time: " << ZRedisUtil::GetInstance().GetMinProcessedTime()\
-              << "\nAvg Processed time: " << ZRedisUtil::GetInstance().GetAverageProcessedTime();
+              << "\nMax Processed time: " << uMaxTime\
+              << "\nMin Processed time: " << uMinTime\
+              << "\nAvg Processed time: " << uAvegTime;
     
     return EXIT_OK;
     

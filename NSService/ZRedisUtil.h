@@ -66,9 +66,9 @@ public:
     bool GetTotalSucceedRequest(uint64_t& uResult);
     bool GetTotalFailedRequest(uint64_t& uResult);
     
-    uint64_t GetAverageProcessedTime();
-    uint64_t GetMaxProcessedTime();
-    uint64_t GetMinProcessedTime();
+    bool GetAverageProcessedTime(uint64_t& uResult);
+    bool GetMaxProcessedTime(uint64_t& uResult);
+    bool GetMinProcessedTime(uint64_t& uResult);
     
 };
 
